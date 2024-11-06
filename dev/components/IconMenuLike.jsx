@@ -5,7 +5,7 @@ import { useGlobalContext } from '../GlobalContext/GlobalContext';
 
 
 
-const IconMenuLike = ({likeValue,   handleLikes,containerStyling,  menuBarStyling, ProfileStyling, bookmarkStyling, }) => {
+const IconMenuLike = ({likeValue,   handleLikes,containerStyling,  menuBarStyling }) => {
     const [menu, setMenu] = useState(false);
   const {likeState} = useGlobalContext()
 

@@ -8,10 +8,9 @@ import Trending from '../../components/Trending';
 import EmptyState from '../../components/EmptyState';
 import { getPost  } from '../../lib/appwrite';
 import { useAppwrite } from '../../lib/useAppWrite';
-import VideoCard from '../../components/VideoCard';
 import { getLatestVideos } from '../../lib/appwrite';
 import { useGlobalContext } from '../../GlobalContext/GlobalContext';
-
+import VideoCard from '../../components/VideoCard';
 
 const Home = () => {
 const [refresh,setRefresh] = useState(false);
@@ -32,7 +31,7 @@ const onRefresh = async()=> {
     data={post}
    keyExtractor={(item)=> item.$id}
     renderItem={({item})=>(
-       <VideoCard video ={item} item = {item} />
+       <VideoCard video ={item} item = {item} iconView={true} />
     )}
     ListHeaderComponent={()=>(
       <View className ="px-4 my-6 space-y-6">

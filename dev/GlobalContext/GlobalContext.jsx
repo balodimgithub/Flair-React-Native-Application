@@ -1,5 +1,8 @@
 import React, {useState, useEffect, useContext,createContext} from 'react';
 import { getUserfunction } from '../lib/appwrite';
+import { getPost } from '../lib/appwrite';
+import {useAppwrite} from "../lib/useAppWrite";
+
 
 
 const GlobalContext = createContext();
@@ -11,12 +14,19 @@ export const GlobalProvider = ({children})=>{
     const [loginAuto, setLoginAuto] = useState(false);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [bookmarkTitle, setBookmarkTitle] = useState([])
+    
+    
    
-   //LIKESTATE VALUES
-   
+ 
 
 
+
+
+
+ 
     useEffect(()=>{
+     
      getUserfunction().then((response)=>{
         if(response){
             setLoginAuto(true);
@@ -31,11 +41,15 @@ export const GlobalProvider = ({children})=>{
         setIsLoading(false)
      })
     },[])
+
  
 return(
     
     <GlobalContext.Provider value={{
-    loginAuto,setLoginAuto, user, setUser,setIsLoading
+        bookmarkTitle, setBookmarkTitle,  
+        loginAuto,setLoginAuto, user, setUser,setIsLoading
+        
+        
     }}>
         {children}
     </GlobalContext.Provider>

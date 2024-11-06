@@ -38,7 +38,7 @@ useEffect(()=> {
       )}
       ListEmptyComponent={()=>(
        <EmptyState
-       title={`The search ${query} could not be found `}
+       title={`The search "${query}" could not be found `}
        subtitle = "You can kindly search for something else"
        />
       )}

@@ -1,85 +1,56 @@
-import { View, Text,Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text,Image, TouchableOpacity, Alert, FlatList } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import { icons } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
 import IconMenuLike from './IconMenuLike';
-import { bookmarkVideo } from '../lib/appwrite';
 import { likesVideo } from '../lib/appwrite';
 import { useGlobalContext } from '../GlobalContext/GlobalContext';
 import { useAppwrite } from '../lib/useAppWrite';
 import { checkLikedVideo } from '../lib/appwrite';
 import { getCurrentPostDocument } from '../lib/appwrite';
+import { getPost } from '../lib/appwrite';
+import Bookmark from '../app/(tabs)/Bookmark';
+import { usePathname } from 'expo-router';
 
-const VideoCard = ({item,video : {Title, Thumbnail,  Propmt, Creator : {Username, Avatar, $id}}}) => {
+ const VideoCard = ({item, video : {Title, Thumbnail,  Propmt, Creator : {Username, Avatar, $id}}, classname, iconView}) => {
     const [play, setPlay] = useState(false);
-    const {user} = useGlobalContext()
-    // const {data : likes} = useAppwrite(()=> checkLikedVideo(Title))
-     const [likeState, setLikeState] = useState({
-    id : item.$id,  likes : "Like",
-   })
-  
-  //console.log(item);
-  //const returnLikedPost = (item)=> {
-    // return item = likeState.likes === "Unlike";
- // }
-const getUserLikes = (item, user)=> {
-
-
-  }
-
-
-  const [showBookmark, setShowBookmark] = useState({
-    id : item.$id  ,item : item, 
-    userLikedVideo : getUserLikes(item)
+    const {user} = useGlobalContext();
+     const {bookmarkTitle, setBookmarkTitle} = useGlobalContext();
+    const [likeState, setLikeState] =  useState({
+      Like : "Like"
     })
- //console.log(showBookmark);
-    
-    //console.log(showBookmark.userLikedVideo);
-//GET THE VIDEOS LIKED
-//console.log(likes[3]);
-//console.log(item.Like[0])
+   //console.log(Title)
    const getLikes = async()=> {
-       if(likeState.likes === "Like"){
-       await likesVideo(Title, user.$id)
-
-      // Checking the like state
+       if(likeState.Like === "Like"){
+       await likesVideo(Title, user.$id) 
+     // Checking the like state
        if(likesVideo){
        setLikeState({
-        likes : "Like"
+         Like : "Unlike"
        })
-     }
-     }else if(likeState.likes === "Unlike"){
+       }
+     }else if(likeState.Like === "Unlike"){
        console.log("Unlike Function ready to run")
       }
-    }
-    useEffect(()=>{
-        getCurrentPostDocument(Title, user.$id, setLikeState)
-        if(getCurrentPostDocument) getUserLikes(item, user);
-     },[likesVideo])
-    // useEffect(()=> {
-    //  const fetchData = (item)=> {
-      //  if(item.Like){
-    // setLikeState("Unlike")
-     //   }
-     // }
-    // })
+       }
 
-    // GET THE VIDEO BOOKMARKED
-   // const getTitle = async()=> {
-      //await bookmarkVideo(Title, $id)
-      //if(bookmarkVideo){
-       // setLikeState({
-       //   likes : "Like",
-       //   Bookmark : "Bookmarked"
-       // })
-     // }else{
-      //  Alert.alert("ERROR:","Failed to bookmark this post to your saved videos")
-     // }
-//}
+   useEffect(()=>{
+     getCurrentPostDocument(Title, user.$id, setLikeState, setBookmarkTitle)
+},[likesVideo])
+
+
+//////FUNCTION TO HELP BOOKMARK VIDEOS
+
+ 
+//console.log(likeState);
+ 
+//console.log(post);
+
+
 
 
   return (
-    <View className="flex flex-col items-center px-4 mb-14">
+    <View className={`flex flex-col items-center px-4  mb-14 ${classname}`}>
         <View className="flex-row gap-3 items-start mb-8">
 
         <View className="items-center flex-row flex-1">
@@ -91,9 +62,10 @@ const getUserLikes = (item, user)=> {
    <Text className="text-xs text-gray-100 font-bold" numberOfLines={1}>{Title}</Text>
  </View>
         </View>
-<IconMenuLike likeValue={likeState.likes}
+
+<IconMenuLike likeValue={likeState.Like}
 handleLikes={(e)=> getLikes(e)}
-containerStyling="pt-2 flex-row gap-4 relative"
+containerStyling={`pt-2 flex-row gap-4 relative ${iconView ? "" : "hidden"}`}
  menuBarStyling="w-5 h-5"
  
 />
@@ -117,8 +89,10 @@ containerStyling="pt-2 flex-row gap-4 relative"
     <View className="flex justify-end mt-5">
       <Text className="text-sm text-gray-100 font-pbold font-medium">{`Likes: ${item.Like ? item.Like.length : 0}`}</Text>
     </View>
+
+   
     </View>
+   
   )
 }
-
-export default VideoCard
+export default VideoCard;

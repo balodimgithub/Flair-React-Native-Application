@@ -14,7 +14,7 @@ import { checkLikedVideo } from '../../lib/appwrite';
 const Profile = () => {
 //The Global context va;ues
 const {user, setUser,setLoginAuto} = useGlobalContext()
-console.log(user);
+//console.log(user);
   const {data : post} = useAppwrite(()=>getUserPost(user.$id));
 
    //To help get data back once query changes

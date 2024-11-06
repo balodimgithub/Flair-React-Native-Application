@@ -2,7 +2,7 @@ import { Tabs, Redirect } from 'expo-router';
 import React from 'react';
 import {View, Text,Image} from "react-native";
 import {icons} from "../../constants"
-
+//import {StatusBar} from "expo-status-bar"
 export default function TabLayout() {
   const TabIcon = ({color, name, focused, icon})=> (
     <View className="flex flex-col items-center justify-center gap-[3px]">
@@ -45,7 +45,10 @@ export default function TabLayout() {
 <Tabs.Screen name='Bookmark'
     options={{
       title : "Bookmark",
-      headerShown : false,
+      headerShown : true,
+      headerStyle: {
+     backgroundColor : "#FFA001"
+      },
       tabBarIcon : ({color, focused}) => (
     <TabIcon name="Bookmark"
     color={color}
@@ -70,6 +73,7 @@ export default function TabLayout() {
     options={{
       title : "Profile",
       headerShown : false,
+      unmountOnBlur : false,
       tabBarIcon : ({color, focused}) => (
     <TabIcon name="Profile"
     color={color}
@@ -77,8 +81,8 @@ export default function TabLayout() {
     icon ={icons.profile}/>
       )
     }}/>
-   </Tabs>
-   
+     </Tabs>
+    
    </>
   );
 }

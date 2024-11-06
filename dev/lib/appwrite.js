@@ -2,6 +2,7 @@
   import { Alert } from 'react-native';
 import { Avatars, Client, Databases, ID, Query, Storage } from 'react-native-appwrite';
   import { Account } from 'react-native-appwrite';
+import { useAppwrite } from './useAppWrite';
   
  export const Config = {
     endpoint : "https://cloud.appwrite.io/v1",
@@ -230,7 +231,7 @@ export const createVideo = async(form)=> {
   throw new Error(error);
 }
 }
-const getTitleVideo = async(title)=> {
+export const getTitleVideo = async(title)=> {
   try {
     const reachTitle =  await database.listDocuments(databaseId, videoCollectionId, [Query.equal("Title", title)])
   //  console.log(reachTitle);
@@ -303,52 +304,48 @@ const getTitleVideo = async(title)=> {
 }
 
  //USEEFFECT MODE
-export const getAllVideo = async()=> {
- try {
- const checkSavedLikes = await database.listDocuments(databaseId, videoCollectionId)
+//export const getAllVideo = async(user)=> {
+ //try {
+ //const checkSavedLikes = await database.listDocuments(databaseId, videoCollectionId)
  //console.log(checkSavedLikes)
- return checkSavedLikes.documents;
- } catch (error) {
-  throw new Error(error)
- }
-}
+ //const likedVideos = checkSavedLikes.documents.filter(userSavedLike=>{
+  //const getDoc = userSavedLike.Like && userSavedLike.Like.includes(user)
+//  console.log(getDoc);
+ // return getDoc
+//})
+//if(likedVideos == []){
+   // console.log(true, likedVideos)
+//}else{
+ // console.log(false, likedVideos)
+//}
+//return likedVideos;
+ //} catch (error) {
+  //throw new Error(error)
+// }
+//}
 
 // TO SEARCH FOR THE PARENT DOCUMENT OF THE POSTS LIKED
-export const getCurrentPostDocument = async(title, user, setLikeState)=> {
+export const getCurrentPostDocument = async(title, user, setLikeState, setBookmarkTitle)=> {
   const checkTitle = await getTitleVideo(title);
- 
-  //console.log(getLikeArray);
-  //console.log(checkTitle)
+  //console.log(title)
   if(checkTitle){
-  checkTitle.documents[0].Like.forEach(element => {
-      let userId = element.$id;
-      //console.log(userId);
-      if(userId == user ){
-        // console.log("TRUE")
-       setLikeState({
-         likes : "Unlike",
-       })
-     console.log
-     }
+   checkTitle.documents[0].Like.forEach((element, index) => {   
+   // console.log(element)
+   let userId = element.$id;
+   if(userId === user){
+    setLikeState({
+      Like : "Unlike"
+    })
+    if(title){
+    //console.log(title)
+   setBookmarkTitle(prevValue => ([...prevValue, title]))
+   }
+  }
     });
-  
- 
-   
+    
   }else{
     Alert.alert("ERROR:", "Couldn't verify likes")
   }
-  
 }
 
-export const getAllUserLikedPost = async(userId)=>{
-  try{
-  const post = await database.listDocuments(
-      databaseId, 
-      videoCollectionId,
-      [Query.equal('Like', [userId.$id]),  Query.orderDesc("$createdAt")])
-  return post.documents;
-  }catch(error){
-   throw new Error(error);
-  }
 
-}
